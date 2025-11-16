@@ -78,13 +78,14 @@
 
     <script>
         const output = document.getElementById('output');
+        const URL = "https://localhost:3000/"
 
         const sendRequest = async (url, body) => {
-            let res = await fetch("http://localhost:3000/" + url, {...body, credentials: 'include'});
+            let res = await fetch(URL + url, {...body, credentials: 'include'});
 
             if (res.status === 401 || res.status === 403) {
                 console.log("must log in first...");
-                res = await fetch("http://localhost:3000/login", {
+                res = await fetch(URL + "login", {
                     method: 'POST',
                     body: JSON.stringify({email: document.querySelector('#loginForm .email').value, password: document.querySelector('#loginForm .password').value}),
                     headers: {'Content-Type': 'application/json'},
@@ -92,11 +93,12 @@
                 });
 
                 if (res.status === 401 || res.status === 403) {
+                    output.textContent = await res.text();
                     console.log("Login failed");
                     return -1;
                 }
 
-                res = await fetch("http://localhost:3000/" + url, {...body, credentials: 'include'});
+                res = await fetch(URL + url, {...body, credentials: 'include'});
             } else if (res.status === 400) {
                 let text = await res.text();
                 console.log(text);
