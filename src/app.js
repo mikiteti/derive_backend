@@ -3,10 +3,11 @@ const cors = require('cors');
 const Database = require("better-sqlite3");
 const session = require("express-session");
 const SQLiteStore = require('connect-sqlite3')(session);
+require('dotenv').config();
 
 const app = express();
 app.use(cors({
-    origin: "http://localhost:53926",
+    origin: process.env.ALLOW,
     credentials: true
 }));
 app.use(express.json());
@@ -19,7 +20,7 @@ app.use(
             ttl: 86400 // seconds = 1 day
             // table: 'sessions',  // optional, default table name
         }),
-        secret: 'secret', // change this to a strong secret
+        secret: process.env.SECRET, // change this to a strong secret
         resave: false,                  // don't save session if unmodified
         saveUninitialized: true,       // only save sessions when something stored
         cookie: {
